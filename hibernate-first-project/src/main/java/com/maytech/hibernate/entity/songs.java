@@ -1,4 +1,4 @@
-package com.maytech.hibernate.hibernate_first_project;
+package com.maytech.hibernate.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -29,4 +29,12 @@ public class songs {
 	public void setArtist(String artist) {
 		this.artist = artist;
 	}
+	@Override
+	public String toString() {
+		return "songs [id=" + id + ", songName=" + songName + ", artist=" + artist + ", getId()=" + getId()
+				+ ", getSongName()=" + getSongName() + ", getArtist()=" + getArtist() + ", getClass()=" + getClass()
+				+ ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
+	}
+	
 }
+
