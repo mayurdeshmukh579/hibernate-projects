@@ -1,10 +1,13 @@
 package com.maytech.lms.entitty;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -27,6 +30,9 @@ public class Instructor {
 	
 	@Column(name = "Instructor_email")
 	private String email;
+	
+	@OneToMany(mappedBy = "instructor")
+	private List<Course> courses;
 	
 	
 
@@ -74,11 +80,23 @@ public class Instructor {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
+
+	public List<Course> getCourses() {
+		return courses;
+	}
+
+	public void setCourses(List<Course> courses) {
+		this.courses = courses;
+	}
 
 	@Override
 	public String toString() {
-		return "Instructor [id=" + id + ", name=" + name + ", teachingexp=" + teachingexp + ", email=" + email + "]";
+		return "Instructor [id=" + id + ", name=" + name + ", teachingexp=" + teachingexp + ", email=" + email
+				+  "]";
 	}
+
+	
 	
 	
 }

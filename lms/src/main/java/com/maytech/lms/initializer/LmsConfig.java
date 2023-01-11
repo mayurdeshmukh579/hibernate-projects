@@ -1,24 +1,35 @@
 package com.maytech.lms.initializer;
 
+import java.beans.PropertyVetoException;
 import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.service.ServiceRegistry;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import com.mchange.v2.c3p0.ComboPooledDataSource;
+
 @EnableWebMvc
 @Configuration
 @ComponentScan("com")
+@EnableTransactionManagement
 public class LmsConfig {
+	
+	@Autowired
+	SessionFactory sessionFactory;
 	
 	@Bean
 	public ViewResolver viewResolver() {
@@ -32,7 +43,7 @@ public class LmsConfig {
 	}
 	
 	@Bean
-	public LocalSessionFactoryBean sessionFactory() {
+	public LocalSessionFactoryBean sessionFactory() throws PropertyVetoException {
 		
 		LocalSessionFactoryBean sessionFactoryBean = new LocalSessionFactoryBean();
 		sessionFactoryBean.setDataSource(getDataSource());
@@ -53,14 +64,30 @@ public class LmsConfig {
 	}
 
 	@Bean
-	public DataSource getDataSource() {
+	public HibernateTransactionManager transactionManager() {
+		HibernateTransactionManager transactionManager = new HibernateTransactionManager(sessionFactory);
 		
-		DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
-		driverManagerDataSource.setUsername("root");
-		driverManagerDataSource.setPassword("Mayur@123");
-		driverManagerDataSource.setUrl("jdbc:mysql://localhost:3306/lmsportal");
-		driverManagerDataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+		return transactionManager;
 		
-		return driverManagerDataSource;
+	}
+	
+	@Bean
+	public DataSource getDataSource() throws PropertyVetoException {
+		
+//		DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
+//		driverManagerDataSource.setUsername("root");
+//		driverManagerDataSource.setPassword("Mayur@123");
+//		driverManagerDataSource.setUrl("jdbc:mysql://localhost:3306/lmsportal");
+//		driverManagerDataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+//		
+		
+		ComboPooledDataSource comboPooledDataSource = new ComboPooledDataSource();
+		comboPooledDataSource.setUser("root");
+		comboPooledDataSource.setPassword("Mayur@123");
+		comboPooledDataSource.setJdbcUrl("jdbc:mysql://localhost:3306/lmsportal");
+		comboPooledDataSource.setDriverClass("com.mysql.cj.jdbc.Driver");
+		
+		
+		return comboPooledDataSource;
 	}
 }
